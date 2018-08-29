@@ -1,0 +1,88 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bunkmate</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script language="JavaScript">
+    function calcAttendance(){
+        var attendedValue = Number(document.getElementById("attended").value);
+        var totalValue = Number(document.getElementById("total").value);
+        var percentageRequiredValue = Number(document.getElementById("percentage_required").value);
+        if(attendedValue == "" || totalValue == "" || percentageRequiredValue == ""){
+            return;
+        }
+        if(attendedValue > totalValue){
+            window.alert("Please Enter Correct  Classes Attended  & Total Classes"+ attendedValue+ " " +totalValue);
+            return;
+        }
+        if(percentageRequiredValue > 100){
+            alert("Percentage Required cannot be greater than 100%");
+            return;
+        }
+        var currentPercentage = Math.round(((attendedValue / totalValue ) * 100)*100)/100;
+        document.getElementById("display").style.display = "";
+        document.getElementById("currentPercentage").innerHTML = "Current Percentage: "+currentPercentage+"%";
+        
+        if(currentPercentage > percentageRequiredValue){
+            var classesToBunk = Math.floor(((100 * attendedValue) - (percentageRequiredValue * totalValue)) / (percentageRequiredValue));
+            document.getElementById("displayAttendance").innerHTML = "You can Bunk: "+classesToBunk+" classes";
+        }
+        else{
+            var classesToAttend = Math.floor(((percentageRequiredValue * totalValue) - (100 * attendedValue)) / (100 - percentageRequiredValue));
+            if(classesToAttend == Infinity){
+                document.getElementById("displayAttendance").innerHTML = "You cannot get 100% attendance &#x1f61b;";
+                return;
+            }
+            if(currentPercentage == 100){
+                document.getElementById("displayAttendance").innerHTML = "You already have 100% attendance &#x1f61b; Start Bunking";
+                return;
+            }
+            document.getElementById("displayAttendance").innerHTML = "You need to attend: "+classesToAttend+" classes";
+        }
+        
+        
+    }
+  </script>
+  
+</head>
+<body>
+
+<div class="container">
+
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <h2>We help you bunk</h2>
+        <form class="form-group" id="myFormId" action="" method="POST">
+          <div class="form-group">
+            <label for="class_attended">Class Attended:</label>
+            <input type="text" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 48 && event.charCode <= 57)" class="form-control" id="attended" placeholder="Enter Class Attended" name="class_attended" required>
+          </div>
+          <div class="form-group">
+            <label for="total_classes">Total Classes:</label>
+            <input type="text" onkeypress="return (event.charCode == 8 || event.charCode == 0 ) ? null : (event.charCode >= 48 && event.charCode <= 57)" class="form-control" id="total" placeholder="Enter Total Classes" name="total_classes" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="percentage_required">Percentage Required:</label>
+            <input type="text" class="form-control" pattern="" id="percentage_required" placeholder="Enter Percentage Required" name="percentage_required">
+          </div>
+          
+    
+
+          <input type="button" class="btn btn-default" value="Submit" onclick="calcAttendance()">
+        </form>
+        <div class="alert alert-success" style="display: none;" id="display">
+            <p><strong id="currentPercentage"></strong></p>
+            <p><strong id="displayAttendance"></strong></p>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+</body>
+</html>
